@@ -16,17 +16,17 @@ def FindIngredient(recette):
              mtrueList = mtrueList.replace('ingredient_group_items":','')
              mjson = json.loads(mtrueList)
              for ingredient in mjson:
-                 print(ingredient['ingredient']['name'])
+                 mIngredient = ingredient['ingredient']['name']
                  try:
-                     print(ingredient['quantity'])
+                     mIngredient+= " " + str(ingredient['quantity'])
                  except KeyError as noQuantity:
                      pass
                  
                  try:
-                     print(ingredient['unit']['name'])
+                     mIngredient+=ingredient['unit']['name']
                  except KeyError as noUnit:
                      pass
-                 
+                 print(mIngredient)
 #FindIngredient(sys.argv)
 # TEST 
 FindIngredient('https://www.marmiton.org/recettes/recette_tagliatelles-carbonara-speciales_15725.aspx')
