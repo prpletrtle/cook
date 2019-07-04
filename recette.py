@@ -3,11 +3,11 @@ import requests, sys, re, json
 import unicodedata
 from bs4 import BeautifulSoup
 
-def FindIngredient(recette):
-    recette = str(recette).replace(" ","_")
-    response = requests.get(recette)
+def getMarmiton(codeRecette):
+    response = requests.get(codeRecette)
     soup = BeautifulSoup(response.content)
     scriptvar = soup.find_all('script')
+    ListmIngredients = []
     for script in scriptvar:
         if "ingredientsGroups" in str(script):
              script = str(script)
@@ -23,10 +23,18 @@ def FindIngredient(recette):
                      pass
                  
                  try:
-                     mIngredient+=ingredient['unit']['name']
+                     mIngredient+= " " +ingredient['unit']['name']
                  except KeyError as noUnit:
                      pass
-                 print(mIngredient)
-#FindIngredient(sys.argv)
+                 ListmIngredients.append(mIngredient)
+    return ListmIngredients
+
+def FindIngredient(recette):
+    print(recette)
+    if 'marmiton' in recette:
+        ListmIngredients = getMarmiton(recette)
+        print(ListmIngredients)
+
+FindIngredient(sys.argv[1])
 # TEST 
-FindIngredient('https://www.marmiton.org/recettes/recette_tagliatelles-carbonara-speciales_15725.aspx')
+#FindIngredient('https://www.marmiton.org/recettes/recette_tagliatelles-carbonara-speciales_15725.aspx')
