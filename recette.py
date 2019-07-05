@@ -6,6 +6,20 @@ from bs4 import BeautifulSoup
 # TODO
 # donner le total des ingredients pour la liste des recettes (genre 5 tomates etc ..)
 
+listMesures = ['cuillère à café','cuillères à café', 'c.c.', 'cuillère à dessert','cuillères à dessert', 'cuillère à soupe','cuillères à soupe',
+                 'c.s.', 'tasse à café','tasses à café', 'bol','bols', 'verre à moutarde','verres à moutarde',
+                 'verre à liqueur', 'grand verre', 'gallon', 'tasse', 'pincée', 'grammes',' g)','g ',' g ', 'litres', ' l ', ' cl', ' ml', ' dl', 'botte']
+listeArticles = [" de ", " d’ ", '(',')', '®']
+listeCourses = []
+
+def cleanIngredients(ingr):
+    for mesure in listMesures:
+        ingr = ingr.replace(mesure,' ')
+    for article in listeArticles:
+        ingr = ingr.replace(article,' ')
+    cleaningr = ''.join([i for i in ingr if not i.isdigit()])
+    cleaningr = cleaningr.strip()
+    return cleaningr
 
 def getMarmiton(codeRecette):
     response = requests.get(codeRecette)
@@ -75,9 +89,13 @@ def FindIngredient(recette):
     if 'monsieur-cuisine' in recette:
         ListmIngredients = getMrCuisine(recette)
 
-    print(ListmIngredients)
+    #print(ListmIngredients)
+    for uniqueIngr in ListmIngredients:
+        listeCourses.append(cleanIngredients(uniqueIngr))
+    #print(listeCourses)
 
 
 listUrl = sys.argv[1:]
 for url in listUrl:
     FindIngredient(url)
+print(listeCourses)
