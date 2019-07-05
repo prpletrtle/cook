@@ -3,6 +3,11 @@ import requests, sys, re, json
 import unicodedata
 from bs4 import BeautifulSoup
 
+#TODO
+#gérer konbini
+#gérer slate
+
+
 def getMarmiton(codeRecette):
     response = requests.get(codeRecette)
     soup = BeautifulSoup(response.content)
@@ -29,11 +34,24 @@ def getMarmiton(codeRecette):
                  ListmIngredients.append(mIngredient)
     return ListmIngredients
 
+def getKonbini(codeRecette):
+    response = requests.get(codeRecette)
+    soup = BeautifulSoup(response.content)
+    listElements = soup.find_all('li')
+    ListmIngredients = []
+    for ingredient in listElements:
+        ListmIngredients += ingredient
+    return ListmIngredients
+
 def FindIngredient(recette):
     print(recette)
     if 'marmiton' in recette:
         ListmIngredients = getMarmiton(recette)
-        print(ListmIngredients)
+        
+    if 'konbini' in recette:
+        ListmIngredients = getKonbini(recette)
+
+    print(ListmIngredients)
 
 FindIngredient(sys.argv[1])
 # TEST 
