@@ -52,6 +52,17 @@ def getSlate(codeRecette):
         ListmIngredients += ingredient
     return ListmIngredients
 
+def getMrCuisine(codeRecette):
+    response = requests.get(codeRecette)
+    soup = BeautifulSoup(response.content)
+    globalElements = soup.findAll('div', attrs={'class':'recipe--ingredients-html-item col-md-8'})
+    ListmIngredients = []
+    for tempelements in globalElements:
+        listElements = tempelements.find_all('li')
+        for ingredient in listElements:
+            ListmIngredients += ingredient
+    return ListmIngredients
+
 def FindIngredient(recette):
     print(recette)
     if 'marmiton' in recette:
@@ -62,6 +73,9 @@ def FindIngredient(recette):
     
     if 'slate' in recette:
         ListmIngredients = getSlate(recette)
+
+    if 'monsieur-cuisine' in recette:
+        ListmIngredients = getMrCuisine(recette)
 
     print(ListmIngredients)
 
