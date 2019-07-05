@@ -4,13 +4,12 @@ import unicodedata
 from bs4 import BeautifulSoup
 
 # TODO
-# gérer multiples url
 # donner le total des ingredients pour la liste des recettes (genre 5 tomates etc ..)
 
 
 def getMarmiton(codeRecette):
     response = requests.get(codeRecette)
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content,"html.parser")
     scriptvar = soup.find_all('script')
     ListmIngredients = []
     for script in scriptvar:
@@ -36,7 +35,7 @@ def getMarmiton(codeRecette):
 
 def getKonbini(codeRecette):
     response = requests.get(codeRecette)
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content,"html.parser")
     listElements = soup.find_all('li',attrs={'class': None})
     ListmIngredients = []
     for ingredient in listElements:
@@ -45,7 +44,7 @@ def getKonbini(codeRecette):
 
 def getSlate(codeRecette):
     response = requests.get(codeRecette)
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content,"html.parser")
     listElements = soup.find_all('li',attrs={'class': None})
     ListmIngredients = []
     for ingredient in listElements:
@@ -54,7 +53,7 @@ def getSlate(codeRecette):
 
 def getMrCuisine(codeRecette):
     response = requests.get(codeRecette)
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content,"html.parser")
     globalElements = soup.findAll('div', attrs={'class':'recipe--ingredients-html-item col-md-8'})
     ListmIngredients = []
     for tempelements in globalElements:
@@ -64,7 +63,6 @@ def getMrCuisine(codeRecette):
     return ListmIngredients
 
 def FindIngredient(recette):
-    print(recette)
     if 'marmiton' in recette:
         ListmIngredients = getMarmiton(recette)
         
@@ -79,6 +77,7 @@ def FindIngredient(recette):
 
     print(ListmIngredients)
 
-FindIngredient(sys.argv[1])
-# TEST 
-#FindIngredient('https://www.marmiton.org/recettes/recette_tagliatelles-carbonara-speciales_15725.aspx')
+
+listUrl = sys.argv[1:]
+for url in listUrl:
+    FindIngredient(url)
