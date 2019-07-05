@@ -3,9 +3,9 @@ import requests, sys, re, json
 import unicodedata
 from bs4 import BeautifulSoup
 
-#TODO
-#gérer konbini
-#gérer slate
+# TODO
+# gérer multiples url
+# donner le total des ingredients pour la liste des recettes (genre 5 tomates etc ..)
 
 
 def getMarmiton(codeRecette):
@@ -37,7 +37,16 @@ def getMarmiton(codeRecette):
 def getKonbini(codeRecette):
     response = requests.get(codeRecette)
     soup = BeautifulSoup(response.content)
-    listElements = soup.find_all('li')
+    listElements = soup.find_all('li',attrs={'class': None})
+    ListmIngredients = []
+    for ingredient in listElements:
+        ListmIngredients += ingredient
+    return ListmIngredients
+
+def getSlate(codeRecette):
+    response = requests.get(codeRecette)
+    soup = BeautifulSoup(response.content)
+    listElements = soup.find_all('li',attrs={'class': None})
     ListmIngredients = []
     for ingredient in listElements:
         ListmIngredients += ingredient
@@ -50,6 +59,9 @@ def FindIngredient(recette):
         
     if 'konbini' in recette:
         ListmIngredients = getKonbini(recette)
+    
+    if 'slate' in recette:
+        ListmIngredients = getSlate(recette)
 
     print(ListmIngredients)
 
