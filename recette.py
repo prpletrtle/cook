@@ -9,8 +9,27 @@ from bs4 import BeautifulSoup
 listMesures = ['cuillère à café','cuillères à café', 'c.c.', 'cuillère à dessert','cuillères à dessert', 'cuillère à soupe','cuillères à soupe',
                  'c.s.', 'tasse à café','tasses à café', 'bol','bols', 'verre à moutarde','verres à moutarde',
                  'verre à liqueur', 'grand verre', 'gallon', 'tasse', 'pincée', 'grammes',' g)','g ',' g ', 'litres', ' l ', ' cl', ' ml', ' dl', 'botte']
-listeArticles = [" de ", " d’ ", '(',')', '®']
+listeArticles = [" de ", " d’", '(',')', '®', '%']
 listeCourses = []
+
+def formatString(nomString):
+	# Vire les espaces au debut et à la fin, vire les tirets et les
+	# underscores. Et met en minuscule
+	if (nomString is not None):
+		try:
+			nomString = nomString.lower()
+			nomString = nomString.strip()
+			nomString = nomString.replace("_", " ")
+			nomString = nomString.replace("-", " ")
+			nomString = nomString.replace("/", " ")
+			nomString = nomString.replace("'", " ")
+		except TypeError:
+			pass
+		except AttributeError:
+			print(nomString)
+			pass
+
+	return nomString
 
 def cleanIngredients(ingr):
     for mesure in listMesures:
@@ -89,10 +108,16 @@ def FindIngredient(recette):
     if 'monsieur-cuisine' in recette:
         ListmIngredients = getMrCuisine(recette)
 
-    #print(ListmIngredients)
+    addUnique = True
     for uniqueIngr in ListmIngredients:
-        listeCourses.append(cleanIngredients(uniqueIngr))
-    #print(listeCourses)
+        uniqueIngr = cleanIngredients(uniqueIngr)
+        uniqueIngr = formatString(uniqueIngr)
+        havetoadd = True
+        for elmt in listeCourses:
+            if elmt in uniqueIngr:
+                havetoadd=False
+        if havetoadd:
+            listeCourses.append(uniqueIngr)
 
 
 listUrl = sys.argv[1:]
