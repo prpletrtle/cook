@@ -88,7 +88,7 @@ class Yara(QtWidgets.QMainWindow):
         if urlDimancheS:
             self.FindIngredient(urlDimancheS)
             
-        
+        self.ingredients.clear()
         for elmt in listeCourses:
             self.ingredients.addItem(elmt)
 
